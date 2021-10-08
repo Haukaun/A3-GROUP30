@@ -1,7 +1,8 @@
 package no.ntnu.datakomm;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
@@ -16,7 +17,7 @@ public class SimpleTcpClient {
     // TCP port
     private static final int PORT = 1301;
 
-    Socket socket = new Socket();
+    private Socket socket;
 
     /**
      * Run the TCP Client.
@@ -120,10 +121,14 @@ public class SimpleTcpClient {
     private boolean connectToServer(String host, int port) {
         boolean connection = false;
 
-        InetSocketAddress ServerAddress = new InetSocketAddress(host, port);
+
         try{
-            socket.connect(ServerAddress);
-            connection = true;
+            socket = new Socket(host, port);
+
+            if(socket.isConnected()){
+                connection = true;
+            }
+
         } catch(IOException e){
             System.out.println("Socket Error: " +e.getMessage());
         }
@@ -138,9 +143,13 @@ public class SimpleTcpClient {
      */
     private boolean closeConnection() {
         boolean close = false;
+
         try {
             socket.close();
-            close = true;
+
+            if(socket.isClosed()){
+                close = true;
+            }
         } catch (IOException e) {
             System.out.println("Error while closing socket: " + e.getMessage());
         }
@@ -155,8 +164,16 @@ public class SimpleTcpClient {
      * @return True when message successfully sent, false on error.
      */
     private boolean sendRequestToServer(String request) {
-        // TODO - implement this method
-        // Hint: you should check if the connection is open
+        boolean messageSent = false;
+
+        try{
+            OutputStream out = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(out, true);
+            writer.println(request);
+            messageSent = true;
+        } catch(IOException e){
+            log(e.getMessage());
+        }
         return false;
     }
 
