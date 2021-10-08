@@ -109,8 +109,8 @@ public class SimpleTcpClient {
      * @return True when connection established, false on error
      */
     private boolean connectToServer(String host, int port) {
-        // TODO - implement this method
-        // Remember to catch all possible exceptions that the Socket class can throw.
+        boolean connection = false;
+
         return false;
     }
 

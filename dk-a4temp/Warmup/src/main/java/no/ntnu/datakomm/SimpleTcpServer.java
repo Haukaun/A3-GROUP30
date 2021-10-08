@@ -20,7 +20,6 @@ public class SimpleTcpServer {
         // TODO - implement the logic of the server, according to the protocol.
         // Take a look at the tutorial to understand the basic blocks: creating a listening socket,
         // accepting the next client connection, sending and receiving messages and closing the connection
-
         try {
             ServerSocket welcomeSocket = new ServerSocket(5555);
 
