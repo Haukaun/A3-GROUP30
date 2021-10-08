@@ -1,10 +1,6 @@
 package no.ntnu.datakomm;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -13,7 +9,7 @@ import java.net.Socket;
  */
 public class SimpleTcpClient {
     // Remote host where the server will be running
-    private static final String HOST = "localhost";
+    private static final String HOST = "datakomm.work";
     // TCP port
     private static final int PORT = 1301;
 
@@ -174,7 +170,7 @@ public class SimpleTcpClient {
         } catch(IOException e){
             log(e.getMessage());
         }
-        return false;
+        return messageSent;
     }
 
     /**
@@ -184,7 +180,6 @@ public class SimpleTcpClient {
      * (not included in the returned value).
      */
     private String readResponseFromServer() {
-        // TODO - implement this method
         // Hint: you should check if the connection is open
         String response = null;
         try {
