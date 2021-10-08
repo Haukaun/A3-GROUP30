@@ -1,6 +1,9 @@
 package no.ntnu.datakomm;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -135,7 +138,6 @@ public class SimpleTcpClient {
      */
     private boolean closeConnection() {
         boolean close = false;
-
         try {
             socket.close();
             close = true;
@@ -167,7 +169,15 @@ public class SimpleTcpClient {
     private String readResponseFromServer() {
         // TODO - implement this method
         // Hint: you should check if the connection is open
-        return null;
+        String response = null;
+        try {
+            InputStream in = socket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            response = reader.readLine();
+        } catch (IOException e) {
+            log(e.getMessage());
+        }
+        return response;
     }
 
     /**
