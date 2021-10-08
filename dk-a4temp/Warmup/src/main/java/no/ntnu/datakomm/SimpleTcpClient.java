@@ -1,5 +1,9 @@
 package no.ntnu.datakomm;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 /**
  * A Simple TCP client, used as a warm-up exercise for assignment A4.
  */
@@ -8,6 +12,8 @@ public class SimpleTcpClient {
     private static final String HOST = "localhost";
     // TCP port
     private static final int PORT = 1301;
+
+    Socket socket = new Socket();
 
     /**
      * Run the TCP Client.
@@ -111,7 +117,14 @@ public class SimpleTcpClient {
     private boolean connectToServer(String host, int port) {
         boolean connection = false;
 
-        return false;
+        InetSocketAddress ServerAddress = new InetSocketAddress(host, port);
+        try{
+            socket.connect(ServerAddress);
+            connection = true;
+        } catch(IOException e){
+            System.out.println("Socket Error: " +e.getMessage());
+        }
+        return connection;
     }
 
     /**
@@ -121,8 +134,15 @@ public class SimpleTcpClient {
      * return true as well.
      */
     private boolean closeConnection() {
-        // TODO - implement this method
-        return false;
+        boolean close = false;
+
+        try {
+            socket.close();
+            close = true;
+        } catch (IOException e) {
+            System.out.println("Error while closing socket: " + e.getMessage());
+        }
+        return close;
     }
 
 
