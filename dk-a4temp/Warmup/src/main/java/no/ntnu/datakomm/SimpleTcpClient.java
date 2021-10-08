@@ -1,13 +1,19 @@
 package no.ntnu.datakomm;
 
+import java.io.*;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+
 /**
  * A Simple TCP client, used as a warm-up exercise for assignment A4.
  */
 public class SimpleTcpClient {
     // Remote host where the server will be running
-    private static final String HOST = "localhost";
+    private static final String HOST = "datakomm.work";
     // TCP port
     private static final int PORT = 1301;
+
+    private Socket socket;
 
     /**
      * Run the TCP Client.
@@ -111,7 +117,18 @@ public class SimpleTcpClient {
     private boolean connectToServer(String host, int port) {
         boolean connection = false;
 
-        return false;
+
+        try{
+            socket = new Socket(host, port);
+
+            if(socket.isConnected()){
+                connection = true;
+            }
+
+        } catch(IOException e){
+            System.out.println("Socket Error: " +e.getMessage());
+        }
+        return connection;
     }
 
     /**
@@ -121,8 +138,18 @@ public class SimpleTcpClient {
      * return true as well.
      */
     private boolean closeConnection() {
-        // TODO - implement this method
-        return false;
+        boolean close = false;
+
+        try {
+            socket.close();
+
+            if(socket.isClosed()){
+                close = true;
+            }
+        } catch (IOException e) {
+            System.out.println("Error while closing socket: " + e.getMessage());
+        }
+        return close;
     }
 
 
@@ -133,9 +160,17 @@ public class SimpleTcpClient {
      * @return True when message successfully sent, false on error.
      */
     private boolean sendRequestToServer(String request) {
-        // TODO - implement this method
-        // Hint: you should check if the connection is open
-        return false;
+        boolean messageSent = false;
+
+        try{
+            OutputStream out = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(out, true);
+            writer.println(request);
+            messageSent = true;
+        } catch(IOException e){
+            log(e.getMessage());
+        }
+        return messageSent;
     }
 
     /**
@@ -145,9 +180,16 @@ public class SimpleTcpClient {
      * (not included in the returned value).
      */
     private String readResponseFromServer() {
-        // TODO - implement this method
         // Hint: you should check if the connection is open
-        return null;
+        String response = null;
+        try {
+            InputStream in = socket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            response = reader.readLine();
+        } catch (IOException e) {
+            log(e.getMessage());
+        }
+        return response;
     }
 
     /**
