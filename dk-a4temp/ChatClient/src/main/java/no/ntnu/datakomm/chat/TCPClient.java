@@ -114,6 +114,8 @@ public class TCPClient {
      * @param username Username to use
      */
     public void tryLogin(String username) {
+
+
         // TODO Step 3: implement this method
         // Hint: Reuse sendCommand() method
     }
@@ -275,7 +277,6 @@ public class TCPClient {
      * @param users List with usernames
      */
     private void onUsersList(String[] users) {
-        // TODO Step 5: Implement this method
     }
 
     /**
@@ -286,7 +287,9 @@ public class TCPClient {
      * @param text   Message text
      */
     private void onMsgReceived(boolean priv, String sender, String text) {
-        // TODO Step 7: Implement this method
+        for(ChatListener l: listeners){
+            l.onMessageReceived(new TextMessage(sender, priv, text));
+        }
     }
 
     /**
@@ -295,7 +298,9 @@ public class TCPClient {
      * @param errMsg Error description returned by the server
      */
     private void onMsgError(String errMsg) {
-        // TODO Step 7: Implement this method
+        for(ChatListener l: listeners){
+            l.onMessageError(errMsg);
+        }
     }
 
     /**
@@ -304,7 +309,9 @@ public class TCPClient {
      * @param errMsg Error message
      */
     private void onCmdError(String errMsg) {
-        // TODO Step 7: Implement this method
+        for(ChatListener l: listeners){
+            l.onCommandError(errMsg);
+        }
     }
 
     /**
@@ -314,6 +321,8 @@ public class TCPClient {
      * @param commands Commands supported by the server
      */
     private void onSupported(String[] commands) {
-        // TODO Step 8: Implement this method
+        for(ChatListener l: listeners){
+            l.onSupportedCommands(commands);
+        }
     }
 }
