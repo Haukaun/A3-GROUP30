@@ -278,6 +278,9 @@ public class TCPClient {
      * @param users List with usernames
      */
     private void onUsersList(String[] users) {
+        for(ChatListener l: listeners){
+            l.onUserList(users);
+        }
     }
 
     /**
