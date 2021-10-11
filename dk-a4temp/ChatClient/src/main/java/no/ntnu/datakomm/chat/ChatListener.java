@@ -3,7 +3,7 @@ package no.ntnu.datakomm.chat;
 /**
  * Interface for a listener that can handle events received from the server
  */
-public interface ChatListener {
+public interface  ChatListener {
 
     /**
      * This method is called when connection (socket) is closed by the remote
