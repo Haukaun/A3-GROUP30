@@ -99,9 +99,13 @@ public class TCPClient {
      */
     public boolean sendPublicMessage(String message) {
         // TODO Step 2: implement this method
+        boolean msgSent = false;
+        if (isConnectionActive() && message != null) {
+            msgSent = sendCommand("msg " + message);
+        }
         // Hint: Reuse sendCommand() method
         // Hint: update lastError if you want to store the reason for the error.
-        return false;
+        return msgSent;
     }
 
     /**
@@ -133,9 +137,13 @@ public class TCPClient {
      */
     public boolean sendPrivateMessage(String recipient, String message) {
         // TODO Step 6: Implement this method
+        boolean msgSent = false;
+        if (isConnectionActive()) {
+            msgSent = sendCommand("privmsg " + recipient + " " + message);
+        }
         // Hint: Reuse sendCommand() method
         // Hint: update lastError if you want to store the reason for the error.
-        return false;
+        return msgSent;
     }
 
 
