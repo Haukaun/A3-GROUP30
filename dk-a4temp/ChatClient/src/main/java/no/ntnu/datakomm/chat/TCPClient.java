@@ -81,7 +81,6 @@ public class TCPClient {
      * @return true on success, false otherwise
      */
     private boolean sendCommand(String cmd) {
-        // TODO Step 2: Implement this method
         // Hint: Remember to check if connection is active
         boolean cmdSent = false;
         if (isConnectionActive() && cmd != null) {
@@ -144,8 +143,10 @@ public class TCPClient {
      * Send a request for the list of commands that server supports.
      */
     public void askSupportedCommands() {
-        // TODO Step 8: Implement this method
         // Hint: Reuse sendCommand() method
+        if (isConnectionActive()) {
+            sendCommand("help");
+        }
     }
 
 
