@@ -23,18 +23,22 @@ public class TCPClient {
      * @return True on success, false otherwise
      */
     public boolean connect(String host, int port) {
-        // TODO Step 1: implement this method
         boolean connected = false;
         try {
-            connection = new Socket(host, port);
-            if(isConnectionActive()) {
+            if (isConnectionActive()) {
+                // Doing the three-way-handshake.
+                connection = new Socket(host, port);
+            }
+            if (connection.isConnected()) {
+                // changing the connected statement if it is enabled.
                 connected = true;
             }
+            // Initializes the read and write variables.
+            toServer = new PrintWriter(connection.getOutputStream(), true);
+            fromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         } catch (IOException e) {
-            System.out.println("Socket Error: " + e.getMessage());
+            lastError = "Socket error: " + e.getMessage();
         }
-        // and return false on error
-        // Hint: Remember to set up all the necessary input/output stream variables
         return connected;
     }
 
@@ -48,8 +52,19 @@ public class TCPClient {
      * that no two threads call this method in parallel.
      */
     public synchronized void disconnect() {
-        // TODO Step 4: implement this method
         // Hint: remember to check if connection is active
+        try {
+            if (isConnectionActive()) {
+                connection.close();
+                onDisconnect();
+
+                // clearing the user list after disconnecting from the server.
+                String[] emptyArray = {};
+                onUsersList(emptyArray);
+            }
+        } catch (IOException e) {
+            lastError = "Disconnection error: " + e.getMessage();
+        }
     }
 
     /**
@@ -66,9 +81,14 @@ public class TCPClient {
      * @return true on success, false otherwise
      */
     private boolean sendCommand(String cmd) {
-        // TODO Step 2: Implement this method
         // Hint: Remember to check if connection is active
-        return false;
+        boolean cmdSent = false;
+        if (isConnectionActive() && cmd != null) {
+            //Send command to server
+            toServer.println(cmd);
+            cmdSent = true;
+        }
+        return cmdSent;
     }
 
     /**
@@ -123,8 +143,10 @@ public class TCPClient {
      * Send a request for the list of commands that server supports.
      */
     public void askSupportedCommands() {
-        // TODO Step 8: Implement this method
         // Hint: Reuse sendCommand() method
+        if (isConnectionActive()) {
+            sendCommand("help");
+        }
     }
 
 
