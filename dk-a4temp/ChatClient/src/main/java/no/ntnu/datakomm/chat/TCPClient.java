@@ -113,8 +113,6 @@ public class TCPClient {
      * @param username Username to use
      */
     public void tryLogin(String username) {
-
-
         // TODO Step 3: implement this method
         // Hint: Reuse sendCommand() method
         if (isConnectionActive()) {
@@ -301,7 +299,7 @@ public class TCPClient {
      * @param errMsg Error description returned by the server
      */
     private void onMsgError(String errMsg) {
-        for(ChatListener l: listeners) {
+        for (ChatListener l : listeners) {
             l.onMessageError(errMsg);
         }
     }
@@ -324,7 +322,7 @@ public class TCPClient {
      * @param commands Commands supported by the server
      */
     private void onSupported(String[] commands) {
-        for(ChatListener l: listeners){
+        for (ChatListener l : listeners) {
             l.onSupportedCommands(commands);
         }
     }
