@@ -98,7 +98,6 @@ public class TCPClient {
      * @return true if message sent, false on error
      */
     public boolean sendPublicMessage(String message) {
-        // TODO Step 2: implement this method
         boolean msgSent = false;
         if (isConnectionActive() && message != null) {
             msgSent = sendCommand("msg " + message);
@@ -116,6 +115,9 @@ public class TCPClient {
     public void tryLogin(String username) {
         // TODO Step 3: implement this method
         // Hint: Reuse sendCommand() method
+        if (isConnectionActive()) {
+            sendCommand("login " + username);
+        }
     }
 
     /**
@@ -136,7 +138,6 @@ public class TCPClient {
      * @return true if message sent, false on error
      */
     public boolean sendPrivateMessage(String recipient, String message) {
-        // TODO Step 6: Implement this method
         boolean msgSent = false;
         if (isConnectionActive()) {
             msgSent = sendCommand("privmsg " + recipient + " " + message);
@@ -151,7 +152,6 @@ public class TCPClient {
      * Send a request for the list of commands that server supports.
      */
     public void askSupportedCommands() {
-        // Hint: Reuse sendCommand() method
         if (isConnectionActive()) {
             sendCommand("help");
         }
@@ -164,11 +164,13 @@ public class TCPClient {
      * @return one line of text (one command) received from the server
      */
     private String waitServerResponse() {
-        // TODO Step 3: Implement this method
-        // TODO Step 4: If you get I/O Exception or null from the stream, it means that something has gone wrong
-        // with the stream and hence the socket. Probably a good idea to close the socket in that case.
-
-        return null;
+        String serverResponse = null;
+        try {
+            serverResponse = fromServer.readLine();
+        } catch (IOException | NullPointerException e) {
+            lastError = "Server response error: " + e.getMessage();
+        }
+        return serverResponse;
     }
 
     /**
@@ -265,8 +267,9 @@ public class TCPClient {
      * Internet error)
      */
     private void onDisconnect() {
-        // TODO Step 4: Implement this method
-        // Hint: all the onXXX() methods will be similar to onLoginResult()
+        for (ChatListener l : listeners) {
+            l.onDisconnect();
+        }
     }
 
     /**
@@ -295,7 +298,9 @@ public class TCPClient {
      * @param errMsg Error description returned by the server
      */
     private void onMsgError(String errMsg) {
-        // TODO Step 7: Implement this method
+        for (ChatListener l : listeners) {
+            l.onMessageError(errMsg);
+        }
     }
 
     /**
@@ -314,6 +319,8 @@ public class TCPClient {
      * @param commands Commands supported by the server
      */
     private void onSupported(String[] commands) {
-        // TODO Step 8: Implement this method
+        for (ChatListener l : listeners) {
+            l.onSupportedCommands(commands);
+        }
     }
 }
