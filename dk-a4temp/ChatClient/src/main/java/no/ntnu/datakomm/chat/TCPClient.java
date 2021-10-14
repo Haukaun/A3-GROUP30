@@ -25,7 +25,7 @@ public class TCPClient {
     public boolean connect(String host, int port) {
         boolean connected = false;
         try {
-            if (isConnectionActive()) {
+            if (!isConnectionActive()) {
                 // Doing the three-way-handshake.
                 connection = new Socket(host, port);
             }
@@ -113,7 +113,6 @@ public class TCPClient {
      * @param username Username to use
      */
     public void tryLogin(String username) {
-        // TODO Step 3: implement this method
         // Hint: Reuse sendCommand() method
         if (isConnectionActive()) {
             sendCommand("login " + username);
@@ -128,6 +127,7 @@ public class TCPClient {
         // TODO Step 5: implement this method
         // Hint: Use Wireshark and the provided chat client reference app to find out what commands the
         // client and server exchange for user listing.
+        sendCommand("users");
     }
 
     /**
@@ -153,7 +153,7 @@ public class TCPClient {
      */
     public void askSupportedCommands() {
         if (isConnectionActive()) {
-            sendCommand("help");
+            sendCommand("help\n");
         }
     }
 
@@ -203,6 +203,39 @@ public class TCPClient {
      */
     private void parseIncomingCommands() {
         while (isConnectionActive()) {
+            String response = waitServerResponse();
+            if (response != null) {
+                String[] splitResponse = response.split(" ", 3);
+                switch (splitResponse[0]) {
+                    case "loginok":
+                        onLoginResult(true, response);
+                        break;
+                    case "loginerr":
+                        onLoginResult(false, response);
+                        break;
+                    case "users":
+                        onUsersList(response.substring(6).split(" "));
+                        break;
+                    case "msg":
+                        onMsgReceived(false, splitResponse[1], splitResponse[2]);
+                        break;
+                    case "privmsg":
+                        onMsgReceived(true, splitResponse[1], splitResponse[2]);
+                    case "msgok":
+                        break;
+                    case "msgerror":
+                        onMsgError(splitResponse[1]);
+                        break;
+                    case "cmderr":
+                        onCmdError(response.substring(7));
+                        break;
+                    case "supported":
+                        String[] cmdList = response.substring(9).split(" ");
+                        onSupported(cmdList);
+                        break;
+
+                }
+            }
             // TODO Step 3: Implement this method
             // Hint: Reuse waitServerResponse() method
             // Hint: Have a switch-case (or other way) to check what type of response is received from the server
