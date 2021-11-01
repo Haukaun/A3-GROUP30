@@ -98,12 +98,7 @@ public class GUIController implements ChatListener {
             loginInput.setText("");
         });
         textInput.setOnKeyPressed(event -> {
-            if (event.getCode().equals(KeyCode.ENTER) && event.isShiftDown()) {
-                // When Shift+"Enter" is pressed in the message input box: start a new line in the message
-                textInput.setText(textInput.getText() + "\n");
-                textInput.requestFocus();
-                textInput.end();
-            } else if (event.getCode().equals(KeyCode.ENTER)) {
+            if (event.getCode().equals(KeyCode.ENTER)) {
                 // When "Enter" is pressed in the message input box: submit the message
                 inputSubmit();
                 event.consume(); // This is needed to disable beeping sound
@@ -122,7 +117,7 @@ public class GUIController implements ChatListener {
      * Take the message from the text input box, send it to the server
      */
     private void inputSubmit() {
-        String msgToSend = textInput.getText();
+        String msgToSend = textInput.getText().trim();
         if (!msgToSend.isEmpty()) {
             TextMessage msg;
             if (tcpClient.isConnectionActive()) {
