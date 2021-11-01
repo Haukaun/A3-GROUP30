@@ -99,7 +99,7 @@ public class TCPClient {
      */
     public boolean sendPublicMessage(String message) {
         boolean msgSent = false;
-        if (isConnectionActive() && message != null) {
+        if (message != null) {
             msgSent = sendCommand("msg " + message);
         }
         // Hint: Reuse sendCommand() method
