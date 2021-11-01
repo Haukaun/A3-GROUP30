@@ -136,7 +136,7 @@ public class GUIController implements ChatListener {
                 } else {
                     tcpClient.sendPublicMessage(msgToSend);
                 }
-                msg = new TextMessage("", false, msgToSend);
+                msg = new TextMessage("", true, msgToSend);
             } else {
                 msg = new TextMessage("you", false, msgToSend);
             }

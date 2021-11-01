@@ -153,7 +153,7 @@ public class TCPClient {
      */
     public void askSupportedCommands() {
         if (isConnectionActive()) {
-            sendCommand("help\n");
+            sendCommand("help ");
         }
     }
 
@@ -233,7 +233,6 @@ public class TCPClient {
                         String[] cmdList = response.substring(9).split(" ");
                         onSupported(cmdList);
                         break;
-
                 }
             }
             // TODO Step 3: Implement this method
