@@ -118,7 +118,7 @@ public class GUIController implements ChatListener {
      * Take the message from the text input box, send it to the server
      */
     private void inputSubmit() {
-        String msgToSend = textInput.getText().trim();
+        String msgToSend = textInput.getText();
         if (!msgToSend.isEmpty()) {
             TextMessage msg;
             if (tcpClient.isConnectionActive()) {
