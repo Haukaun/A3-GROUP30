@@ -100,6 +100,7 @@ public class GUIController implements ChatListener {
         textInput.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.ENTER)) {
                 // When "Enter" is pressed in the message input box: submit the message
+                trimTrailingNewlines();
                 inputSubmit();
                 event.consume(); // This is needed to disable beeping sound
             }
@@ -131,7 +132,7 @@ public class GUIController implements ChatListener {
                 } else {
                     tcpClient.sendPublicMessage(msgToSend);
                 }
-                msg = new TextMessage("", true, msgToSend);
+                msg = new TextMessage("", false, msgToSend);
             } else {
                 msg = new TextMessage("you", false, msgToSend);
             }
@@ -420,5 +421,16 @@ public class GUIController implements ChatListener {
     public void onDisconnect() {
         System.out.println("Socket closed by the remote end");
         updateButtons(false);
+    }
+
+    /**
+     * Remove any trailing newlines from the textInput field.
+     */
+    private void trimTrailingNewlines() {
+        String message = textInput.getText();
+        while (message.length() > 0 && message.charAt(message.length() - 1) == '\n') {
+            message = message.substring(0, message.length() - 1);
+        }
+        textInput.setText(message);
     }
 }
